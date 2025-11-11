@@ -4,18 +4,22 @@
 # SCRIPT PER DISATTIVARE LA LINEA TELEFONICA DELLA ILIADBOX
 # ==============================================================================
 
-# --- CONFIGURAZIONE (MODIFICA QUESTO PERCORSO!) ---
-# Inserisci il percorso ASSOLUTO dello script get_session_token.sh
-# Esempio: GET_TOKEN_SCRIPT="/home/cristian/Documents/iliadbox/get_session_token.sh"
-GET_TOKEN_SCRIPT="/home/cristian/Documents/iliadbox/get_session_token_http.sh"
-# --- FINE CONFIGURAZIONE ---
-
+# Carica la configurazione centrale (config.sh nella stessa cartella dello script)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${CONFIG_FILE:-$SCRIPT_DIR/config.sh}"
+if [ -f "$CONFIG_FILE" ]; then
+    # shellcheck disable=SC1090
+    . "$CONFIG_FILE"
+else
+    echo "Errore: file di configurazione '$CONFIG_FILE' non trovato. Crea il file config.sh o controlla il percorso." >&2
+    exit 1
+fi
 
 # --- Non modificare oltre questo punto ---
 echo "Disattivazione della linea telefonica in corso..."
 
 if [ ! -f "$GET_TOKEN_SCRIPT" ]; then
-    echo "Errore: Lo script get_session_token.sh non è stato trovato. Controlla il percorso." >&2
+    echo "Errore: Lo script get_session_token.sh non è stato trovato (GET_TOKEN_SCRIPT=$GET_TOKEN_SCRIPT). Controlla il percorso." >&2
     exit 1
 fi
 
@@ -26,8 +30,7 @@ if [ "$SESSION_TOKEN" == "null" ] || [ -z "$SESSION_TOKEN" ]; then
   exit 1
 fi
 
-ILIADBOX_URL="http://192.168.1.254"
-API_ENDPOINT="/api/latest/phone/sip"
+API_ENDPOINT="$API_PHONE_SIP_ENDPOINT"
 PAYLOAD='{"enabled": false}'
 
 RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \

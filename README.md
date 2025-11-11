@@ -22,7 +22,7 @@ Passaggi principali (sintesi)
 
 2) Eseguire `autorizza_app.sh` per ottenere l'app_token
    - Questo script invia la richiesta di autorizzazione (HTTPS) e poi attende che tu approvi la richiesta usando il display della Iliadbox.
-   - Quando lo stato diventa `granted` lo script mostra l'`app_token`. Copialo e Incollalo nello script `get_session_token_http.sh` nella variabile `APP_TOKEN`.
+   - Quando lo stato diventa `granted` lo script mostra l'`app_token`. Copialo e incollalo nella variabile `APP_TOKEN` dentro il file `config.sh` (alla radice del repository).
 
 3) Usare `get_session_token_http.sh` per ottenere un `session_token`
    - Lo script calcola la password HMAC-SHA1 usando la challenge fornita dalla box e il tuo `app_token`, poi richiede la sessione.
@@ -39,8 +39,8 @@ Esempio di uso rapido
   - Assicurati che `iliad-ca.pem` contenga i certificati corretti.
   - Esegui: `./autorizza_app.sh` (approva la richiesta dal display della box)
 
-- Imposta `APP_TOKEN` in `get_session_token_http.sh` (non committare il valore):
-  - Apri il file e incolla `APP_TOKEN="il_tuo_app_token_ricevuto"`.
+ - Imposta `APP_TOKEN` in `config.sh` (non committare il valore):
+    - Apri `config.sh` e incolla `APP_TOKEN="il_tuo_app_token_ricevuto"`.
 
 - Ottieni un token di sessione (il file restituirà solo il token):
   - `./get_session_token_http.sh`
@@ -62,9 +62,3 @@ Note tecniche e consigli
 - Lo script `autorizza_app.sh` usa `curl --cacert iliad-ca.pem --resolve` per bypassare DNS e validare HTTPS con il certificato fornito.
 - Se lavori da una rete diversa o la box ha indirizzo IP differente, aggiorna `ILIADBOX_IP` negli script.
 - Per debug, verifica le risposte HTTP salvando l'output completo di `curl` invece di usare opzione `-s`.
-
-Se vuoi, posso anche:
-- rimuovere o generalizzare i percorsi assoluti presenti negli script (es. percorso di `get_session_token_http.sh`).
-- aggiungere un piccolo script di esempio per installare i certificati locali sul sistema.
-
-Fine della documentazione.

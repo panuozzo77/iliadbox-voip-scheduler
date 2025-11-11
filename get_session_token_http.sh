@@ -4,21 +4,21 @@
 # SCRIPT PER OTTENERE UN TOKEN DI SESSIONE DALLA ILIADBOX
 # ==============================================================================
 
-# --- CONFIGURAZIONE ---
-# Incolla qui l'app_token valido che hai ottenuto e autorizzato con lo stato "granted"
-# Attenzione: NON committare il valore reale in un repository pubblico.
-# Esempio: APP_TOKEN="REPLACE_WITH_YOUR_APP_TOKEN"
-APP_TOKEN=""
-# --- FINE CONFIGURAZIONE ---
 
+# Carica la configurazione centrale (config.sh nella stessa cartella dello script)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${CONFIG_FILE:-$SCRIPT_DIR/config.sh}"
+if [ -f "$CONFIG_FILE" ]; then
+  # shellcheck disable=SC1090
+  . "$CONFIG_FILE"
+else
+  echo "Errore: file di configurazione '$CONFIG_FILE' non trovato. Crea il file config.sh o controlla il percorso." >&2
+  exit 1
+fi
 
-# --- Non modificare oltre questo punto ---
-APP_ID="it.iliad.phone.scheduler"
-ILIADBOX_URL="http://192.168.1.254" # Usiamo HTTP per le richieste locali
-
-# Verifica che l'APP_TOKEN sia stato impostato
+# Verifica che l'APP_TOKEN sia stato impostato nel config
 if [ -z "$APP_TOKEN" ]; then
-  echo "Errore: APP_TOKEN non impostato. Apri il file e incolla il tuo app_token nella variabile APP_TOKEN." >&2
+  echo "Errore: APP_TOKEN non impostato in $CONFIG_FILE. Apri il file e incolla il tuo app_token." >&2
   exit 1
 fi
 

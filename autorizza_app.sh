@@ -4,18 +4,19 @@
 # SCRIPT PER L'AUTORIZZAZIONE INIZIALE DI UNA NUOVA APPLICAZIONE SULLA ILIADBOX
 # ==============================================================================
 
-# --- Dati di configurazione dell'applicazione ---
-APP_ID="it.iliad.phone.scheduler"
-APP_NAME="Pianificatore Telefono"
-APP_VERSION="1.0"
-DEVICE_NAME="VM Iliadbox"
-# ----------------------------------------------
+# Carica la configurazione centrale (config.sh nella stessa cartella dello script)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${CONFIG_FILE:-$SCRIPT_DIR/config.sh}"
+if [ -f "$CONFIG_FILE" ]; then
+  # shellcheck disable=SC1090
+  . "$CONFIG_FILE"
+else
+  echo "Errore: file di configurazione '$CONFIG_FILE' non trovato. Crea il file config.sh o controlla il percorso." >&2
+  exit 1
+fi
 
-# --- Dati di rete (non modificare) ---
-ILIADBOX_DOMAIN="hn14dipb.ibxos.it"
-ILIADBOX_IP="192.168.1.254"
-CA_CERT_PATH="./iliad-ca.pem"
-# ------------------------------------
+# Ora le variabili come APP_ID, APP_NAME, ILIADBOX_DOMAIN, ILIADBOX_IP e CA_CERT_PATH
+# provengono da config.sh (vedi config.sh per i valori di default).
 
 # Controlla se il file del certificato esiste
 if [ ! -f "$CA_CERT_PATH" ]; then
@@ -79,12 +80,13 @@ while true; do
     echo -e "\033[1;32m           AUTORIZZAZIONE CONCESSA CON SUCCESSO!         \033[0m"
     echo -e "\033[1;32m=========================================================\033[0m"
     echo ""
-    echo "Il tuo token applicazione (app_token) è:"
+  echo "Il tuo token applicazione (app_token) è:"
     echo ""
-    echo -e "\033[1;37m$APP_TOKEN\033[0m"
-    echo ""
-    echo "Copia questo token e incollalo nella variabile 'APP_TOKEN' degli altri script."
-    echo "Questa operazione non dovrà più essere ripetuta."
+  echo -e "\033[1;37m$APP_TOKEN\033[0m"
+  echo ""
+  echo "Copia questo token e incollalo nella variabile 'APP_TOKEN' dentro 'config.sh' in questo repository." 
+  echo "NON committare il valore se il repository è pubblico."
+  echo "Questa operazione non dovrà più essere ripetuta."
     break
   elif [ "$STATUS" != "pending" ]; then
     echo ""
