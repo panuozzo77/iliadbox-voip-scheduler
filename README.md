@@ -2,8 +2,12 @@
 
 Scopo
 -----
-Questa raccolta di script permette di autorizzare un'applicazione sulla tua Iliadbox (per ottenere un app_token),
-ottenere un token di sessione e poi attivare/disattivare la linea telefonica (API locale).
+Questa raccolta di script permette di:
+- autorizzare un'applicazione sulla tua Iliadbox (per ottenere un app_token)
+- ottenere un token di sessione
+- attivare/disattivare la linea telefonica (tramite chiamata API).
+
+Questa funzionalità non è presente nella documentazione della IliadBox WiFi 6, però è possibile attivare e disattivare il telefono tramite una checkbox dal pannello di controllo. La possibilità di schedulare l'orario permette di non cambiare modello di telefono fisso o dover impiegare una smart-plug o presa con timer.
 
 Nota di sicurezza
 ------------------
@@ -26,7 +30,7 @@ Passaggi principali (sintesi)
 
 3) Usare `get_session_token_http.sh` per ottenere un `session_token`
    - Lo script calcola la password HMAC-SHA1 usando la challenge fornita dalla box e il tuo `app_token`, poi richiede la sessione.
-   - Per sicurezza lo script non contiene più un token hard-coded: devi incollare il tuo `APP_TOKEN` manualmente.
+   - Per sicurezza lo script non contiene più un token hard-coded: devi incollare il tuo `APP_TOKEN` manualmente in `config.sh`.
 
 4) Attivare / Disattivare la linea
    - `attiva_telefono_http.sh` -> abilita la linea telefonica
@@ -62,3 +66,4 @@ Note tecniche e consigli
 - Lo script `autorizza_app.sh` usa `curl --cacert iliad-ca.pem --resolve` per bypassare DNS e validare HTTPS con il certificato fornito.
 - Se lavori da una rete diversa o la box ha indirizzo IP differente, aggiorna `ILIADBOX_IP` negli script.
 - Per debug, verifica le risposte HTTP salvando l'output completo di `curl` invece di usare opzione `-s`.
+- Al fine di schedulare a proprio piacimento l'orario di funzionamento del telefono, è consigliabile impiegare un raspberry su cui eseguire il cronjob agli intervalli preferiti.
